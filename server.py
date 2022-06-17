@@ -38,11 +38,11 @@ def handleConnection(con, p, gameId):
                     break
                 else:
                     if data == "reset":
-                        game.restGame()
+                        game.resetGame()
                     elif data != "get":
                         game.play(p, data)
 
-                    con.sendall(pickle.dump(game))
+                    con.sendall(pickle.dumps(game))
             else:
                 break
         
@@ -58,7 +58,7 @@ def handleConnection(con, p, gameId):
     except:
         pass
 
-    idCount = -1
+    idCount -= 1
     con.close()
 
     
@@ -69,11 +69,11 @@ while True:
 
     idCount += 1
     p = 0
-    gameId = (idCount-1)//2
+    gameId = (idCount - 1) // 2
 
-    if idCount%2 == 1:
+    if idCount % 2 == 1:
         games[gameId] = Game(gameId)
-        print("Creating a New Game")
+        print("Creating a new Game...")
         
     else:
         games[gameId].ready = True
