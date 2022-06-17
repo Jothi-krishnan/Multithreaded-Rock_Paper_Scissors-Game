@@ -1,5 +1,6 @@
 import socket
-from _thread import *
+from threading import Thread
+from threading import Lock
 import pickle
 from gameLogic import Game
 
@@ -20,46 +21,57 @@ print("Server Started...Waiting for Players to join..")
 connected = set()
 games = {}
 idCount = 0
+lock = Lock()
 
+def handleConnection(lock, con, p, gameId):
+    with lock:
+        global idCount
+        con.send(str.encode(str(p)))
+        reply = ""
+        while True:
+            try:
+                data = con.recv(4096).decode()
+                
+                if gameId in games:
+                    game = games[gameId]
 
-def handleConnection(con, p, gameId):
-    global idCount
-    con.send(str.encode(str(p)))
+                    if not data:
+                        if lock.locked():
+                            lock.release()
+                        break
+                    else:
+                        if data == "reset":
+                            game.resetGame()
+                        elif data != "get":
+                            game.play(p, data)
 
-    reply = ""
-    while True:
-        try:
-            data = con.recv(4096).decode()
-            
-            if gameId in games:
-                game = games[gameId]
-
-                if not data:
-                    break
+                        con.sendall(pickle.dumps(game))
+                        if lock.locked():
+                            lock.release()
                 else:
-                    if data == "reset":
-                        game.resetGame()
-                    elif data != "get":
-                        game.play(p, data)
-
-                    con.sendall(pickle.dumps(game))
-            else:
+                    if lock.locked():
+                        lock.release()
+                    break
+            
+            except:
+                if lock.locked():
+                    lock.release()
                 break
+
         
+        print("Lost Connection")
+
+        try:
+            del games[gameId]
+            print("Closing Game", gameId)
         except:
-            break
+            pass
 
-    
-    print("Lost Connection")
+        idCount -= 1
 
-    try:
-        del games[gameId]
-        print("Closing Game", gameId)
-    except:
-        pass
-
-    idCount -= 1
-    con.close()
+        if lock.locked():
+            lock.release()
+        con.close()
 
     
     
@@ -80,4 +92,4 @@ while True:
         p = 1
 
         
-    start_new_thread(handleConnection, (con, p, gameId))
+    Thread(target = handleConnection, args = (lock, con, p, gameId)).start()
