@@ -34,8 +34,8 @@ class Network:
             print(e)
 
 
-WIDTH =  700
-HEIGHT = 700
+WIDTH =  400
+HEIGHT = 400
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Client")
 
@@ -46,12 +46,12 @@ class Button:
         self.x = x
         self.y = y
         self.color = color
-        self.width = 150
-        self.height = 100
+        self.width = 100
+        self.height = 50
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height))
-        font = pygame.font.SysFont("comicsans", 40)
+        font = pygame.font.SysFont("comicsans", 20)
         text = font.render(self.text, 1, (255, 255, 255))
         win.blit(text, (self.x+round(self.width/2)-round(text.get_width()/2), self.y + round(self.height/2) - round(text.get_height()/2)))
     
@@ -65,20 +65,20 @@ class Button:
     
 
 def redrawWindow(win, game, p):
-    win.fill((128, 128, 128))
+    win.fill((255, 255, 255))
 
     if not(game.isConnected()):
-        font = pygame.font.SysFont("comicsans", 80)
-        text = font.render("Waiting for player...", 1, (255, 0, 0), True)
+        font = pygame.font.SysFont("comicsans", 30)
+        text = font.render("Waiting for opponent...", 1, (0, 0, 0))
         win.blit(text, (WIDTH/2 - text.get_width()/2, HEIGHT/2 - text.get_height()/2))
     
     else:
-        font = pygame.font.SysFont("comicsans", 60)
+        font = pygame.font.SysFont("comicsans", 30)
         text = font.render("Your Move", 1, (0, 255, 255))
-        win.blit(text, (80, 200))
+        win.blit(text, (30, 50))
 
         text = font.render("Opponent's", 1, (0, 255, 255))
-        win.blit(text, (380, 200))
+        win.blit(text, (200, 50))
 
         move1 = game.getPlayerMove(0)
         move2 = game.getPlayerMove(1)
@@ -104,11 +104,11 @@ def redrawWindow(win, game, p):
                 text2 = font.render("Waiting...", 1, (0, 0, 0))
         
         if p == 1:
-            win.blit(text2, (100, 350))
-            win.blit(text1, (400, 350))
+            win.blit(text2, (30, 120))
+            win.blit(text1, (200, 120))
         else:
-            win.blit(text1, (100, 350))
-            win.blit(text2, (400, 350))
+            win.blit(text1, (30, 120))
+            win.blit(text2, (200, 120))
 
         for btn in btns:
             btn.draw(win)
@@ -116,7 +116,7 @@ def redrawWindow(win, game, p):
     pygame.display.update()
 
 
-btns = [Button("Rock", 50, 500, (0, 0, 0)), Button("Paper", 250, 500, (255, 0, 0)), Button("Scissors", 450, 500, (0, 255, 0))]
+btns = [Button("Rock", 25, 300, (0, 0, 0)), Button("Paper", 150, 300, (255, 0, 0)), Button("Scissors", 275, 300, (0, 255, 0))]
 
 
 def main():
@@ -147,13 +147,13 @@ def main():
                 print("Couldn't get game")
                 break
 
-            font = pygame.font.SysFont("comicsans", 90)
+            font = pygame.font.SysFont("comicsans", 60)
             if (game.findWinner() == 1 and player == 1) or (game.findWinner() == 0 and player == 0):
-                text = font.render("You Won!!!", 1, (255, 0, 0))
+                text = font.render("You Won!!!", 1, (0, 255, 0))
             elif game.findWinner() == -1:
-                text = font.render("Game Tied", 1, (255, 0, 0))
+                text = font.render("Game Tied", 1, (0, 0, 0))
             else:
-                text = font.render("You Lost..", 1, (255, 0, 0))
+                text = font.render("You Lost...", 1, (255, 0, 0))
             
             win.blit(text, (WIDTH/2 -text.get_width()/2, HEIGHT/2 - text.get_height()/2))
             pygame.display.update()
@@ -185,9 +185,15 @@ def menu():
     while run:
         clock.tick(60)
         win.fill((128, 128, 128))
-        font = pygame.font.SysFont("comicsans", 60)
+        font1 = pygame.font.SysFont("comicsans", 40)
+        text1 = font1.render("Rock Paper Scissors", 1, (0, 0, 0))
+        text2 = font1.render("Game", 1, (0, 0, 0))
+        win.blit(text1, (WIDTH/2 -text1.get_width()/2, HEIGHT/2 - text1.get_height()/2 - 100))
+        win.blit(text2, (WIDTH/2 - text2.get_width()/2, HEIGHT/2 - text2.get_height()/2 - 50))
+
+        font = pygame.font.SysFont("comicsans", 50)
         text = font.render("Click to Play!!!", 1, (255, 0, 0))
-        win.blit(text, (100, 200))
+        win.blit(text, (WIDTH/2 - text.get_width()/2, HEIGHT/2 - text.get_height()/2 + 50))
         pygame.display.update()
 
         for event in pygame.event.get():
