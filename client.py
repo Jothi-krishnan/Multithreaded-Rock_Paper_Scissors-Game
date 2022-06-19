@@ -8,14 +8,14 @@ pygame.font.init()
 class Network:
     #initializing the instance with the server and port. 
     """
-    The SERVER stores the IPv4 Address of your system. 
+    The self.server stores the IPv4 Address of your system. 
     You have to update this line once you clone my github repository. 
     To do this, open command prompt in windows and type "ipconfig" without the quotation marks or in ubuntu you can refer the Network settings.
     Then copy and paste the IPv4 Address provided there in Line 18 of this file and also in line 13 of server.py file
     """
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server = "192.168.1.6"
+        self.server = "PASTE YOUR IPv4 ADDRESS HERE"
         self.port = 5555
         self.addr = (self.server, self.port)
         self.p = self.connect()

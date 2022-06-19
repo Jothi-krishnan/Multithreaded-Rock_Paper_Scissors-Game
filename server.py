@@ -10,7 +10,7 @@ You have to update this line once you clone my github repository.
 To do this, open command prompt in windows and type "ipconfig" without the quotation marks or in ubuntu you can refer the Network settings.
 Then copy and paste the IPv4 Address provided there in Line 13 of this file and also in line 18 of client.py file
 """
-SERVER = "192.168.1.6"
+SERVER = "PASTE YOUR IPv4 ADDRESS HERE"
 PORT = 5555
 
 #initialization of socket
